@@ -14,7 +14,7 @@ impl Sorter {
 		if display {
 			match is_solved {
 				true => {
-					for (from, to, _) in puzzle.moves.iter() {
+					for (from, to) in puzzle.moves_iter() {
 						println!("Move: {} -> {}", from + 1, to + 1);
 					}
 				}

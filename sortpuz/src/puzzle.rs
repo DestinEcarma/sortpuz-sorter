@@ -1,10 +1,10 @@
 use crate::{Color, Jar};
 use rand::Rng;
-use std::fmt;
+use std::{fmt, slice::Iter};
 
 pub struct Puzzle {
-	pub(crate) jars: Vec<Jar>,
-	pub(crate) moves: Vec<(usize, usize, usize)>,
+	jars: Vec<Jar>,
+	moves: Vec<(usize, usize, usize)>,
 
 	zobrist_table: Vec<Vec<[u64; 4]>>,
 }
@@ -45,7 +45,7 @@ impl fmt::Debug for Puzzle {
 impl fmt::Display for Puzzle {
 	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		for (index, jar) in self.jars.iter().enumerate() {
-			write!(f, "{:<02}: {jar}\n", index + 1)?;
+			writeln!(f, "{:<02}: {jar}", index + 1)?;
 		}
 
 		write!(f, "")
@@ -57,10 +57,10 @@ impl Puzzle {
 		let mut zobrist_table = vec![vec![[0; 4]; Color::SIZE]; jars.len()];
 		let mut rng = rand::thread_rng();
 
-		for i in 0..jars.len() {
+		for table in zobrist_table.iter_mut() {
 			for color in Color::LIST {
 				for j in Jar::RANGE {
-					zobrist_table[i][color.index()][j] =
+					table[color.index()][j] =
 						rng.gen::<u64>() & rng.gen::<u64>() & rng.gen::<u64>();
 				}
 			}
@@ -89,12 +89,20 @@ impl Puzzle {
 		self.jars.len()
 	}
 
-	pub fn iter(&self) -> impl Iterator<Item = &Jar> {
+	pub fn is_empty(&self) -> bool {
+		self.jars.is_empty()
+	}
+
+	pub fn iter(&self) -> Iter<Jar> {
 		self.jars.iter()
 	}
 }
 
 impl Puzzle {
+	pub(crate) fn moves_iter(&self) -> impl Iterator<Item = (&usize, &usize)> {
+		self.moves.iter().map(|(from, to, _)| (from, to))
+	}
+
 	#[inline(always)]
 	pub(crate) fn is_jar_solved(&self, index: usize) -> bool {
 		self.jars[index].is_sorted()
@@ -172,11 +180,9 @@ impl Puzzle {
 				}
 
 				self.moves.push((from, to, 1));
-				return true;
+				true
 			}
-			None => {
-				return false;
-			}
+			None => false,
 		}
 	}
 }
