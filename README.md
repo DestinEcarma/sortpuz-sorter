@@ -16,7 +16,7 @@ or
 cargo run --release
 ```
 
-There is also an option to use the ball method via the features:
+There is also an option to use the ball method via features:
 
 ```sh
 cargo run --release --features ball
