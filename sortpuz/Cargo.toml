@@ -1,0 +1,12 @@
+[package]
+name = "sortpuz"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[features]
+ball = []
+
+[dependencies]
+rand = "0.8.4"
+colored = "2.1.0"
