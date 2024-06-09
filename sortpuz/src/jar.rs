@@ -84,6 +84,10 @@ impl Jar {
 		self.count
 	}
 
+	pub(crate) fn is_empty(&self) -> bool {
+		self.count == 0
+	}
+
 	pub(crate) fn iter(&self) -> std::slice::Iter<Color> {
 		self.colors.iter()
 	}
@@ -91,10 +95,6 @@ impl Jar {
 	pub(crate) fn unchecked_push(&mut self, color: Color) {
 		self.colors[self.count] = color;
 		self.count += 1;
-	}
-
-	pub(crate) fn is_empty(&self) -> bool {
-		self.count == 0
 	}
 
 	pub(crate) fn is_sorted(&self) -> bool {
