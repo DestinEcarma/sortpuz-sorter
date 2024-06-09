@@ -84,6 +84,7 @@ impl Jar {
 		self.count
 	}
 
+	#[inline(always)]
 	pub(crate) fn is_empty(&self) -> bool {
 		self.count == 0
 	}
